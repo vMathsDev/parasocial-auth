@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conectando con Kick...</title>
+    <style>
+        body {
+            background-color: #0b0e11; /* Color de fondo oscuro */
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify_content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #53FC18; /* Verde Kick */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        a { color: #53FC18; text-decoration: none; font-weight: bold; }
+        .card {
+            background: #191b1f;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="loader"></div>
+        <h2>Volviendo a ParasocialCRM...</h2>
+        <p>Si no eres redirigido automáticamente, <a id="manualLink" href="#">haz clic aquí</a>.</p>
+    </div>
+
+    <script>
+        // 1. Obtener el código de autorización que nos manda Kick en la URL
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+
+        if (code) {
+            // 2. Construir la URL personalizada de tu App
+            // Esta es la "magia" que abre tu aplicación iOS/Android
+            const appDeepLink = "parasocialcrm://kick-callback?code=" + code;
+
+            // Asignar al enlace manual por si el automático falla
+            document.getElementById('manualLink').href = appDeepLink;
+
+            // 3. Redirigir automáticamente
+            // Usamos un pequeño timeout para asegurar que el navegador procese todo
+            setTimeout(function() {
+                window.location.href = appDeepLink;
+            }, 500);
+        } else {
+            document.body.innerHTML = "<h3>Error: No se recibió ningún código de Kick.</h3>";
+        }
+    </script>
+</body>
+</html>
